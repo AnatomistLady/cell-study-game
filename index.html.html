@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Diagram Tap Quiz - 3D Cell Model</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px 10px 30px;
+    }
+    header {
+      width: 100%;
+      max-width: 550px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .mode-bar {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 10px;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 8px 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .mode-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+    .prompt-box {
+      width: 100%;
+      max-width: 550px;
+      background: #1e293b;
+      border: 2px solid #38bdf8;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .prompt-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+    .prompt-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 550px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    /* THE REAL IMAGE CONTAINER */
+    .stage {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #334155;
+      background: #000;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .stage img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* PINS OVERLAY */
+    .pin {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      transform: translate(-50%, -50%);
+      background: rgba(14, 165, 233, 0.9);
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.8);
+      transition: transform 0.15s ease, background 0.15s ease;
+      z-index: 10;
+    }
+    .pin:active {
+      transform: translate(-50%, -50%) scale(1.25);
+    }
+    .pin.correct {
+      background: #22c55e !important;
+      border-color: #ffffff !important;
+      box-shadow: 0 0 16px #22c55e !important;
+    }
+    .pin.wrong {
+      background: #ef4444 !important;
+      animation: shake 0.3s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translate(-50%, -50%); }
+      25% { transform: translate(-60%, -50%); }
+      75% { transform: translate(-40%, -50%); }
+    }
+
+    .feedback-banner {
+      margin-top: 10px;
+      min-height: 24px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🔬 Diagram Tap Quiz</h1>
+  </header>
+
+  <div class="mode-bar">
+    <button class="mode-btn active" id="btnModeName" onclick="setMode('name')">🏷️ By Name</button>
+    <button class="mode-btn" id="btnModeJob" onclick="setMode('job')">⚡ By Job</button>
+    <button class="mode-btn" id="btnModeExplore" onclick="setMode('explore')">🔍 Explore</button>
+  </div>
+
+  <div class="stats">
+    <span>Score: <span id="scoreVal" style="color:#38bdf8;">0</span></span>
+    <span>Streak: <span id="streakVal" style="color:#22c55e;">0</span> 🔥</span>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-label" id="promptLabel">Find This Structure</div>
+    <div class="prompt-text" id="promptText">Loading prompt...</div>
+  </div>
+
+  <div class="stage">
+    <!-- ACTUAL UPLOADED MODEL PHOTO AS THE BACKGROUND -->
+    <img src="cell_model.jpg" alt="3D Animal Cell Model">
+
+    <!-- INTERACTIVE PINS PLACED DIRECTLY OVER MODEL STRUCTURES -->
+    <div class="pin" style="top: 56%; left: 49%;" onclick="handleTap('nucleus')">1</div>
+    <div class="pin" style="top: 54%; left: 49%;" onclick="handleTap('nucleolus')">2</div>
+    <div class="pin" style="top: 48%; left: 63%;" onclick="handleTap('ribosomes')">3</div>
+    <div class="pin" style="top: 70%; left: 63%;" onclick="handleTap('rough_er')">4</div>
+    <div class="pin" style="top: 32%; left: 37%;" onclick="handleTap('smooth_er')">5</div>
+    <div class="pin" style="top: 33%; left: 46%;" onclick="handleTap('golgi')">6</div>
+    <div class="pin" style="top: 31%; left: 53%;" onclick="handleTap('vesicles')">7</div>
+    <div class="pin" style="top: 41%; left: 41%;" onclick="handleTap('mitochondria')">8</div>
+    <div class="pin" style="top: 40%; left: 54%;" onclick="handleTap('centrioles')">9</div>
+    <div class="pin" style="top: 79%; left: 57%;" onclick="handleTap('lysosome')">10</div>
+    <div class="pin" style="top: 25%; left: 64%;" onclick="handleTap('membrane')">11</div>
+  </div>
+
+  <div class="feedback-banner" id="feedbackBanner"></div>
+
+  <script>
+    const ORGANELLES = [
+      { id: "nucleus", pin: 1, name: "Nucleus", job: "Protects the DNA that controls the activities of the cell" },
+      { id: "nucleolus", pin: 2, name: "Nucleolus", job: "Inside the nucleus; makes rRNA which make up ribosomes" },
+      { id: "ribosomes", pin: 3, name: "Ribosomes", job: "Make proteins!!! (White specks on the light-blue Rough ER)" },
+      { id: "rough_er", pin: 4, name: "Rough ER", job: "Makes proteins and packages them for secretion; hugs the nucleus" },
+      { id: "smooth_er", pin: 5, name: "Smooth ER", job: "Makes lipids (membrane); no ribosomes on surface" },
+      { id: "golgi", pin: 6, name: "Golgi Apparatus", job: "Processes, sorts, and ships proteins where needed in vesicles" },
+      { id: "vesicles", pin: 7, name: "Vesicles", job: "Like mini-carts that transport proteins around the cell" },
+      { id: "mitochondria", pin: 8, name: "Mitochondria", job: "Powerhouse of the cell; cellular respiration breaks down food for ATP" },
+      { id: "centrioles", pin: 9, name: "Centrioles", job: "Made of microtubules; pull chromosomes apart during cell division" },
+      { id: "lysosome", pin: 10, name: "Lysosome", job: "Breaks down dead stuff (food, bacteria, old cell parts); apoptosis" },
+      { id: "membrane", pin: 11, name: "Cell Membrane", job: "Phospholipid bilayer; controls what goes IN and OUT of the cell" }
+    ];
+
+    let currentMode = 'name';
+    let target = null;
+    let score = 0;
+    let streak = 0;
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      if (mode === 'name') document.getElementById('btnModeName').classList.add('active');
+      if (mode === 'job') document.getElementById('btnModeJob').classList.add('active');
+      if (mode === 'explore') document.getElementById('btnModeExplore').classList.add('active');
+      clearPins();
+      nextQuestion();
+    }
+
+    function clearPins() {
+      document.querySelectorAll('.pin').forEach(p => p.className = 'pin');
+      document.getElementById('feedbackBanner').textContent = '';
+    }
+
+    function nextQuestion() {
+      clearPins();
+      if (currentMode === 'explore') {
+        document.getElementById('promptLabel').textContent = "Explore Mode";
+        document.getElementById('promptText').textContent = "Tap any numbered pin on the cell model to identify it!";
+        return;
+      }
+      target = ORGANELLES[Math.floor(Math.random() * ORGANELLES.length)];
+      if (currentMode === 'name') {
+        document.getElementById('promptLabel').textContent = "Find by Structure Name";
+        document.getElementById('promptText').textContent = `Tap the ${target.name}!`;
+      } else {
+        document.getElementById('promptLabel').textContent = "Find by Function / Job";
+        document.getElementById('promptText').textContent = `Tap the organelle that: "${target.job}"`;
+      }
+    }
+
+    function handleTap(id) {
+      const tapped = ORGANELLES.find(o => o.id === id);
+      const pinEl = document.querySelectorAll('.pin')[tapped.pin - 1];
+
+      if (currentMode === 'explore') {
+        document.getElementById('promptLabel').textContent = `Pin #${tapped.pin}: ${tapped.name}`;
+        document.getElementById('promptText').textContent = tapped.job;
+        pinEl.classList.add('correct');
+        setTimeout(() => pinEl.classList.remove('correct'), 1000);
+        return;
+      }
+
+      if (id === target.id) {
+        score += 10;
+        streak += 1;
+        document.getElementById('scoreVal').textContent = score;
+        document.getElementById('streakVal').textContent = streak;
+        pinEl.classList.add('correct');
+        document.getElementById('feedbackBanner').innerHTML = `<span style="color:#22c55e;">✓ Correct! That is the ${target.name}.</span>`;
+        setTimeout(nextQuestion, 1200);
+      } else {
+        streak = 0;
+        document.getElementById('streakVal').textContent = streak;
+        pinEl.classList.add('wrong');
+        document.getElementById('feedbackBanner').innerHTML = `<span style="color:#ef4444;">✗ That is the ${tapped.name}. Try again!</span>`;
+        setTimeout(() => pinEl.classList.remove('wrong'), 500);
+      }
+    }
+
+    window.onload = () => setMode('name');
+  </script>
+</body>
+</html>
