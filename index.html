@@ -185,17 +185,39 @@
     <img src="cell_model.jpg" alt="3D Animal Cell Model">
 
     <!-- INTERACTIVE PINS PLACED DIRECTLY OVER MODEL STRUCTURES -->
-    <div class="pin" style="top: 58%; left: 49%;" onclick="handleTap('nucleus')">1</div>
-    <div class="pin" style="top: 53%; left: 50%;" onclick="handleTap('nucleolus')">2</div>
-    <div class="pin" style="top: 48%; left: 63%;" onclick="handleTap('ribosomes')">3</div>
-    <div class="pin" style="top: 72%; left: 62%;" onclick="handleTap('rough_er')">4</div>
-    <div class="pin" style="top: 35%; left: 37%;" onclick="handleTap('smooth_er')">5</div>
-    <div class="pin" style="top: 33%; left: 46%;" onclick="handleTap('golgi')">6</div>
-    <div class="pin" style="top: 32%; left: 53%;" onclick="handleTap('vesicles')">7</div>
-    <div class="pin" style="top: 41%; left: 41%;" onclick="handleTap('mitochondria')">8</div>
-    <div class="pin" style="top: 40%; left: 54%;" onclick="handleTap('centrioles')">9</div>
-    <div class="pin" style="top: 79%; left: 57%;" onclick="handleTap('lysosome')">10</div>
-    <div class="pin" style="top: 25%; left: 65%;" onclick="handleTap('membrane')">11</div>
+   <!-- INTERACTIVE PINS CALIBRATED TO CLASSROOM CELL MODEL -->
+    <!-- 1: Nucleus (white spherical cutaway) -->
+    <div class="pin" style="top: 57%; left: 45%;" onclick="handleTap('nucleus')">1</div>
+
+    <!-- 2: Nucleolus (amber sphere inside nucleus) -->
+    <div class="pin" style="top: 53%; left: 45%;" onclick="handleTap('nucleolus')">2</div>
+
+    <!-- 3: Rough ER (light-blue speckled sheets) -->
+    <div class="pin" style="top: 41%; left: 69%;" onclick="handleTap('rough_er')">3</div>
+
+    <!-- 4: Ribosomes (white specks studded on Rough ER) -->
+    <div class="pin" style="top: 76%; left: 69%;" onclick="handleTap('ribosomes')">4</div>
+
+    <!-- 5: Golgi Body / Apparatus (pink folded ribbons) -->
+    <div class="pin" style="top: 25%; left: 40%;" onclick="handleTap('golgi')">5</div>
+
+    <!-- 6: Mitochondria (orange/red cristae capsule near top) -->
+    <div class="pin" style="top: 11%; left: 45%;" onclick="handleTap('mitochondria')">6</div>
+
+    <!-- 7: Centrioles (yellow cylinders inside dark circle) -->
+    <div class="pin" style="top: 35%; left: 52%;" onclick="handleTap('centrioles')">7</div>
+
+    <!-- 8: Smooth ER (dark blue tubules without dots) -->
+    <div class="pin" style="top: 36%; left: 24%;" onclick="handleTap('smooth_er')">8</div>
+
+    <!-- 9: Lysosome (bright yellow sphere) -->
+    <div class="pin" style="top: 89%; left: 58%;" onclick="handleTap('lysosome')">9</div>
+
+    <!-- 10: Cytoplasm (clear/tan fluid interior) -->
+    <div class="pin" style="top: 67%; left: 23%;" onclick="handleTap('cytoplasm')">10</div>
+
+    <!-- 11: Cell Membrane (outer turquoise rim) -->
+    <div class="pin" style="top: 50%; left: 88%;" onclick="handleTap('membrane')">11</div>
   </div>
 
   <div class="feedback-banner" id="feedbackBanner"></div>
